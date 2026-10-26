@@ -70,6 +70,26 @@ body {
   color: var(--foreground);
 }
 
+/* Filter sedang memuat: redupkan isi di bawah toolbar (tabel, paginasi) sampai data baru tiba */
+[data-filter-pending] ~ * {
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+
+@keyframes filter-progress {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
+@utility animate-filter-progress {
+  animation: filter-progress 1s ease-in-out infinite;
+}
+
 /* Tombol pilihan tema: yang aktif ditandai lewat atribut <html>, tanpa state React */
 :root[data-theme-pref="light"] [data-theme-option="light"],
 :root[data-theme-pref="dark"] [data-theme-option="dark"],

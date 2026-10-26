@@ -28,9 +28,10 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
             <SidebarNav />
           </Suspense>
         </nav>
-        <div className="hidden space-y-2 md:block">
-          <div className="px-2.5">
-            <ThemeToggle />
+        <div className="hidden space-y-1 md:block">
+          <div className="flex items-center justify-between gap-2 px-2.5">
+            <span className="text-xs text-muted">Tema</span>
+            <ThemeToggle compact />
           </div>
           <Suspense fallback={<div className="h-12" />}>
             <UserBadge />

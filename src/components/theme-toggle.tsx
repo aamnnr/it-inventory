@@ -12,8 +12,9 @@ const OPTIONS: { value: ThemePreference; label: string; icon: typeof Sun }[] = [
 /**
  * Tombol pilihan tema. Tombol yang aktif ditandai lewat CSS (atribut data-theme-pref di <html>),
  * sehingga hasil render server dan browser selalu sama (tidak ada hydration error).
+ * `compact`: ikon saja (untuk menu samping yang sempit), label muncul sebagai tooltip.
  */
-export function ThemeToggle() {
+export function ThemeToggle({ compact = false }: { compact?: boolean }) {
   function choose(pref: ThemePreference) {
     if (window.__setTheme) {
       window.__setTheme(pref);
@@ -29,7 +30,11 @@ export function ThemeToggle() {
   }
 
   return (
-    <div role="group" aria-label="Pilihan tema" className="flex rounded-lg bg-subtle p-0.5 ring-1 ring-border">
+    <div
+      role="group"
+      aria-label="Pilihan tema"
+      className={`flex rounded-lg bg-subtle p-0.5 ring-1 ring-border ${compact ? "w-fit" : "w-full"}`}
+    >
       {OPTIONS.map(({ value, label, icon: Icon }) => (
         <button
           key={value}
@@ -37,10 +42,13 @@ export function ThemeToggle() {
           data-theme-option={value}
           onClick={() => choose(value)}
           title={`Tema ${label}`}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted transition-colors hover:text-foreground"
+          aria-label={`Tema ${label}`}
+          className={`flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-xs text-muted transition-colors hover:text-foreground ${
+            compact ? "size-7" : "flex-1 px-2 py-1.5"
+          }`}
         >
-          <Icon className="size-3.5" />
-          {label}
+          <Icon className="size-3.5 shrink-0" />
+          {!compact && label}
         </button>
       ))}
     </div>
