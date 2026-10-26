@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { refresh } from "next/cache";
+import { refresh, revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { ASSET_STATUSES, CATEGORIES, CATEGORY_KEYS, publicFields, secretFields, type AssetCategory } from "@/lib/categories";
@@ -97,6 +97,7 @@ export async function saveAsset(_prev: ActionState, formData: FormData): Promise
     if (result.error) return { error: `Data sensitif gagal disimpan: ${result.error.message}` };
   }
 
+  revalidatePath("/", "layout"); // kosongkan cache browser agar daftar & detail langsung terbarui
   redirect(`/aset/${assetId}`);
 }
 
@@ -105,6 +106,7 @@ export async function deleteAsset(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.from("assets").delete().eq("id", field(formData, "id"));
   if (error) throw new Error(`Gagal menghapus: ${error.message}`);
+  revalidatePath("/", "layout"); // kosongkan cache browser agar daftar & detail langsung terbarui
   redirect("/aset");
 }
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { refresh } from "next/cache";
+import { refresh, revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionState } from "@/lib/types";
@@ -23,6 +23,7 @@ export async function saveDevice(_prev: ActionState, formData: FormData): Promis
   if (!employee_id) return { error: "Pilih pemilik laptop" };
   const { data: row, error } = await supabase.from("personal_devices").insert({ ...data, employee_id }).select("id").single();
   if (error) return { error: error.message };
+  revalidatePath("/", "layout"); // kosongkan cache browser agar daftar & detail langsung terbarui
   redirect(`/laptop-pribadi/${row.id}`);
 }
 

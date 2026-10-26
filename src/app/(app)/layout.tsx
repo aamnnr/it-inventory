@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { CalendarDays, LogOut } from "lucide-react";
 import { Breadcrumb, NavLinks, NavLinksFallback } from "@/components/nav";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { getCurrentUser } from "@/lib/auth";
 import { todayISO } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
@@ -27,7 +28,10 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
             <SidebarNav />
           </Suspense>
         </nav>
-        <div className="hidden md:block">
+        <div className="hidden space-y-2 md:block">
+          <div className="px-2.5">
+            <ThemeToggle />
+          </div>
           <Suspense fallback={<div className="h-12" />}>
             <UserBadge />
           </Suspense>
@@ -44,7 +48,8 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
           </Suspense>
         </header>
         <main className="min-w-0 flex-1 p-4 md:p-6 print:p-0">{children}</main>
-        <div className="border-t border-border p-3 print:hidden md:hidden">
+        <div className="space-y-2 border-t border-border p-3 print:hidden md:hidden">
+          <ThemeToggle />
           <Suspense fallback={null}>
             <UserBadge />
           </Suspense>

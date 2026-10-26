@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/*
+ * Tema diatur lewat atribut di <html>:
+ *   data-theme="light" | "dark"           → tema yang sedang dipakai (sudah diselesaikan)
+ *   data-theme-pref="light"|"dark"|"system" → pilihan pengguna (disimpan di localStorage)
+ * Atribut dipasang oleh script di <head> (lihat src/lib/theme.ts) sebelum halaman digambar.
+ */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* Gaya bersih bernuansa netral, mengikuti referensi UI: kartu putih, tombol utama hitam */
 :root {
   --background: #f4f4f5;
@@ -11,10 +19,25 @@
   --primary: #18181b;
   --primary-hover: #3f3f46;
   --danger: #dc2626;
+  color-scheme: light;
 }
 
+:root[data-theme="dark"] {
+  --background: #0c0c0e;
+  --surface: #161619;
+  --subtle: #1d1d21;
+  --foreground: #ececee;
+  --muted: #a1a1aa;
+  --border: #2a2a2f;
+  --primary: #fafafa;
+  --primary-hover: #d4d4d8;
+  --danger: #f87171;
+  color-scheme: dark;
+}
+
+/* Cadangan bila JavaScript mati: tetap ikuti tema perangkat */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     --background: #0c0c0e;
     --surface: #161619;
     --subtle: #1d1d21;
@@ -24,6 +47,7 @@
     --primary: #fafafa;
     --primary-hover: #d4d4d8;
     --danger: #f87171;
+    color-scheme: dark;
   }
 }
 
@@ -46,11 +70,31 @@ body {
   color: var(--foreground);
 }
 
-/* Cetak (label QR, laporan): kertas A4, latar putih */
+/* Tombol pilihan tema: yang aktif ditandai lewat atribut <html>, tanpa state React */
+:root[data-theme-pref="light"] [data-theme-option="light"],
+:root[data-theme-pref="dark"] [data-theme-option="dark"],
+:root[data-theme-pref="system"] [data-theme-option="system"],
+:root:not([data-theme-pref]) [data-theme-option="system"] {
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+}
+
+/* Cetak (label QR, laporan): kertas A4, latar putih, selalu tema terang */
 @media print {
   @page {
     size: A4;
     margin: 8mm;
+  }
+  :root,
+  :root[data-theme="dark"] {
+    --background: #ffffff;
+    --surface: #ffffff;
+    --subtle: #f7f7f8;
+    --foreground: #000000;
+    --muted: #52525b;
+    --border: #d4d4d8;
+    color-scheme: light;
   }
   body {
     background: #fff;

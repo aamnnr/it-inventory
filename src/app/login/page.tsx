@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "Masuk" };
@@ -15,6 +16,9 @@ export default function LoginPage() {
         <Suspense fallback={<div className="h-44" />}>
           <LoginForm />
         </Suspense>
+        <div className="mt-6 border-t border-border pt-4">
+          <ThemeToggle />
+        </div>
       </div>
     </main>
   );

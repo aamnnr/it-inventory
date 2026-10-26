@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { refresh } from "next/cache";
+import { refresh, revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -39,5 +39,6 @@ export async function saveEmployee(_prev: ActionState, formData: FormData): Prom
   }
   const { data: row, error } = await supabase.from("employees").insert(data).select("id").single();
   if (error) return { error: `Gagal menyimpan: ${error.message}` };
+  revalidatePath("/", "layout"); // kosongkan cache browser agar daftar & detail langsung terbarui
   redirect(`/karyawan/${row.id}`);
 }

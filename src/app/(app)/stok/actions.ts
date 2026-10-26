@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { refresh } from "next/cache";
+import { refresh, revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -71,6 +71,7 @@ export async function saveItem(_prev: ActionState, formData: FormData): Promise<
     });
     if (error) return { error: `Barang tersimpan, tetapi stok awal gagal: ${error.message}` };
   }
+  revalidatePath("/", "layout"); // kosongkan cache browser agar daftar & detail langsung terbarui
   redirect(`/stok/${itemId}`);
 }
 

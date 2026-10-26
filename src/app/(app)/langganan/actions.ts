@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { refresh } from "next/cache";
+import { refresh, revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -49,6 +49,7 @@ export async function saveSubscription(_prev: ActionState, formData: FormData): 
   }
   const { data: row, error } = await supabase.from("subscriptions").insert(data).select("id").single();
   if (error) return { error: error.message };
+  revalidatePath("/", "layout"); // kosongkan cache browser agar daftar & detail langsung terbarui
   redirect(`/langganan/${row.id}`);
 }
 
