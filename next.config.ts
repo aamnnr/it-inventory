@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
+  // Dipakai di route handler laporan Excel; dimuat langsung oleh Node, tidak di-bundle
+  serverExternalPackages: ["exceljs"],
   partialPrefetching: true,
   turbopack: {
     rules: {

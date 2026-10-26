@@ -27,8 +27,10 @@ export async function proxy(request: NextRequest) {
 
   if (!loggedIn && !isLogin) {
     const url = request.nextUrl.clone();
+    const target = request.nextUrl.pathname + request.nextUrl.search;
     url.pathname = "/login";
-    url.search = "";
+    // Ingat halaman tujuan (mis. hasil scan QR /q/FTK-PC-001) agar dibuka lagi setelah login
+    url.search = target !== "/" ? `?next=${encodeURIComponent(target)}` : "";
     return NextResponse.redirect(url);
   }
   if (loggedIn && isLogin) {

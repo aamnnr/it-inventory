@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "Masuk" };
@@ -10,7 +11,10 @@ export default function LoginPage() {
         <p className="text-xs font-medium uppercase tracking-wider text-primary">Kembar Futa Group</p>
         <h1 className="mt-1 text-xl font-semibold">Inventaris IT Support</h1>
         <p className="mb-6 mt-1 text-sm text-muted">Masuk dengan akun yang dibuat oleh admin.</p>
-        <LoginForm />
+        {/* useSearchParams di form membaca ?next= sehingga perlu batas Suspense */}
+        <Suspense fallback={<div className="h-44" />}>
+          <LoginForm />
+        </Suspense>
       </div>
     </main>
   );

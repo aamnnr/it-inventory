@@ -13,8 +13,8 @@ export const instant = false;
 
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
-    <div className="flex min-h-screen flex-1 flex-col gap-2 p-2 md:flex-row md:gap-0 md:p-3">
-      <aside className="flex flex-col md:sticky md:top-3 md:h-[calc(100vh-1.5rem)] md:w-60 md:shrink-0 md:pr-3">
+    <div className="flex min-h-screen flex-1 flex-col gap-2 p-2 md:flex-row md:gap-0 md:p-3 print:block print:p-0">
+      <aside className="flex flex-col print:hidden md:sticky md:top-3 md:h-[calc(100vh-1.5rem)] md:w-60 md:shrink-0 md:pr-3">
         <div className="flex items-center gap-2 px-2.5 py-2 md:mb-5">
           <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-surface">K</span>
           <div className="leading-tight">
@@ -34,8 +34,8 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
         </div>
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col rounded-xl border border-border bg-surface shadow-sm">
-        <header className="flex h-12 items-center justify-between gap-3 border-b border-border px-4 md:px-6">
+      <div className="flex min-w-0 flex-1 flex-col rounded-xl border border-border bg-surface shadow-sm print:rounded-none print:border-0 print:shadow-none">
+        <header className="flex h-12 items-center justify-between gap-3 border-b border-border px-4 print:hidden md:px-6">
           <Suspense fallback={<span />}>
             <Breadcrumb />
           </Suspense>
@@ -43,8 +43,8 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
             <Today />
           </Suspense>
         </header>
-        <main className="min-w-0 flex-1 p-4 md:p-6">{children}</main>
-        <div className="border-t border-border p-3 md:hidden">
+        <main className="min-w-0 flex-1 p-4 md:p-6 print:p-0">{children}</main>
+        <div className="border-t border-border p-3 print:hidden md:hidden">
           <Suspense fallback={null}>
             <UserBadge />
           </Suspense>

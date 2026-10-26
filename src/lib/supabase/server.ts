@@ -16,10 +16,15 @@ export async function createClient() {
       cookies: {
         getAll: () => cookieStore.getAll(),
         setAll: (toSet) => {
-          try {
-            for (const { name, value, options } of toSet) cookieStore.set(name, value, options);
-          } catch {
-            // Dipanggil dari Server Component: cookie di-refresh oleh proxy.ts
+          for (const { name, value, options } of toSet) {
+            // Lewati cookie yang tidak berubah. Menulis ulang cookie di Server Action memicu
+            // InvariantError pada cookies() berikutnya di `next dev` (Next.js 16.4).
+            if (cookieStore.get(name)?.value === value) continue;
+            try {
+              cookieStore.set(name, value, options);
+            } catch {
+              // Dipanggil dari Server Component: cookie di-refresh oleh proxy.ts
+            }
           }
         },
       },

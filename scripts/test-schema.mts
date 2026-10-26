@@ -150,6 +150,20 @@ const total = (await asUser(viewer, `select sum(cost)::int as t from personal_re
 check(`perbaikan laptop pribadi terbaca (total ${total})`, total === 1650000);
 check("viewer tidak bisa menambah perbaikan", await fails(() => asUser(viewer, `insert into personal_repairs (device_id, item) values ($1, 'x')`, [dev])));
 
+// ---------- Fase 4: kelola pengguna ----------
+const emails = (await db.query<{ email: string }>(`select email from profiles order by email`)).rows.map((r) => r.email);
+check(`email tersalin ke profil (${emails.join(", ")})`, emails.includes("admin@x.id") && emails.includes("viewer@x.id"));
+await asUser(viewer, `update profiles set full_name = 'Nama Baru' where id = $1`, [viewer]);
+check("pengguna bisa mengubah namanya sendiri", (await db.query<Record<string, unknown>>(`select full_name from profiles where id = $1`, [viewer])).rows[0].full_name === "Nama Baru");
+check("viewer tidak bisa menjadikan dirinya admin", await fails(() => asUser(viewer, `update profiles set role = 'admin' where id = $1`, [viewer])));
+await asUser(viewer, `update profiles set full_name = 'X' where id = $1`, [admin]);
+check("viewer tidak bisa mengubah profil orang lain", (await db.query<Record<string, unknown>>(`select full_name from profiles where id = $1`, [admin])).rows[0].full_name !== "X");
+check("admin terakhir tidak bisa diturunkan", await fails(() => asUser(admin, `update profiles set role = 'viewer' where id = $1`, [admin])));
+await asUser(admin, `update profiles set role = 'admin' where id = $1`, [viewer]);
+check("admin bisa menjadikan pengguna lain admin", (await db.query<Record<string, unknown>>(`select role from profiles where id = $1`, [viewer])).rows[0].role === "admin");
+await asUser(admin, `update profiles set role = 'viewer' where id = $1`, [admin]);
+check("admin boleh turun bila masih ada admin lain", (await db.query<Record<string, unknown>>(`select role from profiles where id = $1`, [admin])).rows[0].role === "viewer");
+
 await db.close();
 if (failures) {
   console.error(`\n${failures} pengujian gagal`);

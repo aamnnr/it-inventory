@@ -15,6 +15,7 @@ import { decryptSecrets } from "@/lib/secrets";
 import { createClient } from "@/lib/supabase/server";
 import type { Asset, Assignment } from "@/lib/types";
 import { MAINTENANCE_TYPES, dueStatus, type MaintenanceLog } from "@/lib/care";
+import { appOrigin, assetQrUrl, qrSvg } from "@/lib/qr";
 import { deleteAsset } from "../actions";
 
 export const metadata: Metadata = { title: "Detail Aset" };
@@ -45,6 +46,8 @@ export default async function AssetDetailPage({ params }: PageProps<"/aset/[id]"
   const secrets = secretRow.data ? decryptSecrets(secretRow.data.ciphertext) : {};
   const specItems = publicFields(a.category).filter((f) => a.specs?.[f.key]);
   const secretList = secretFields(a.category);
+  const qrUrl = assetQrUrl(await appOrigin(), a.code);
+  const qr = await qrSvg(qrUrl);
 
   return (
     <>
@@ -228,6 +231,21 @@ export default async function AssetDetailPage({ params }: PageProps<"/aset/[id]"
               />
             </Card>
           )}
+          <Card
+            title="Label QR"
+            actions={
+              <Link href={`/aset/label?ids=${a.id}`} className="text-xs text-muted hover:text-foreground hover:underline">
+                Cetak label
+              </Link>
+            }
+          >
+            <div className="flex items-center gap-4">
+              <div className="size-24 shrink-0 rounded-md bg-white p-1.5" dangerouslySetInnerHTML={{ __html: qr }} />
+              <p className="text-xs text-muted">
+                Scan dengan kamera HP untuk membuka halaman ini. Alamat: <span className="break-all font-mono">{qrUrl}</span>
+              </p>
+            </div>
+          </Card>
           {isAdmin && (
             <Card title="Log Perubahan">
               <ActivityList recordIds={[a.id, ...(history ?? []).map((h) => h.id)]} />

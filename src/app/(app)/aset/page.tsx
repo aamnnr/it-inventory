@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Boxes, CircleCheck, Download, Plus, TriangleAlert, Users } from "lucide-react";
+import { Boxes, CircleCheck, Download, Plus, QrCode, TriangleAlert, Users } from "lucide-react";
 import { CategoryIcon } from "@/components/category-icon";
 import { FilterBar } from "@/components/filter-bar";
 import { Badge, Card, EmptyState, LinkButton, PageHeader, Pagination, STATUS_TONE, StatCard, StatGrid, Table, Td, Th } from "@/components/ui";
@@ -80,6 +80,9 @@ export default async function AssetsPage({ searchParams }: PageProps<"/aset">) {
             },
           ]}
         >
+          <LinkButton variant="secondary" href={filterHref("/aset/label", filters, { page: undefined })}>
+            <QrCode className="size-4" /> Cetak Label QR
+          </LinkButton>
           <LinkButton variant="secondary" href={exportHref} prefetch={false}>
             <Download className="size-4" /> Export CSV
           </LinkButton>

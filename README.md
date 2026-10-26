@@ -22,6 +22,12 @@ Futake, Futastone, Futafarm, Ayem Tentrem Logam, Futago Karya, dan Tviling.
 - **Riwayat transaksi**: filter per jenis, unit, dan bulan, beserta rekap pemakaian per unit bisnis.
 - Export CSV daftar stok.
 
+## Fitur Fase 4: Label QR, Laporan, Pengguna
+
+- **Label QR**: cetak label stiker (A4, 3 kolom) per unit/kategori, atau per aset dari halaman detail. Scan dengan kamera HP untuk membuka detail aset (`/q/KODE-ASET`). Bila belum login, pengguna diarahkan ke halaman tersebut setelah login.
+- **Laporan Excel**: satu file `.xlsx` berisi 10 sheet (ringkasan, aset, stok, transaksi, maintenance, langganan, pembayaran, perbaikan laptop pribadi, karyawan), dengan filter unit bisnis dan periode.
+- **Kelola Pengguna**: ubah nama dan peran Admin/Viewer dari aplikasi. Admin terakhir tidak bisa diturunkan.
+
 ## Fitur Fase 3: Perawatan
 
 - **Maintenance**: jadwal pembersihan rutin per kategori (PC/laptop 6 bulan, printer 3 bulan, UPS/CCTV 12 bulan; bisa diubah). Daftar aset yang terlambat atau jatuh tempo dalam 30 hari, plus riwayat service, perbaikan, dan upgrade beserta biayanya.
@@ -37,7 +43,7 @@ Futake, Futastone, Futafarm, Ayem Tentrem Logam, Futago Karya, dan Tviling.
 
 1. Daftar/masuk di <https://supabase.com>, lalu **New project**. Pilih region **Singapore**.
 2. Buka **SQL Editor → New query**, salin seluruh isi `supabase/migrations/0001_init.sql`, lalu klik **Run**.
-   Ulangi untuk `0002_stock.sql` (Fase 2) dan `0003_maintenance.sql` (Fase 3), satu file per query, dan jalankan berurutan.
+   Ulangi untuk `0002_stock.sql` (Fase 2), `0003_maintenance.sql` (Fase 3), dan `0004_users.sql` (Fase 4), satu file per query, dan jalankan berurutan.
    Pastikan role yang dipakai adalah **postgres**, bukan *read-only*.
 3. Buka **Authentication → Sign In / Providers**, lalu **matikan "Allow new users to sign up"**.
    Akun hanya dibuat oleh admin, sehingga orang luar tidak bisa mendaftar sendiri.
@@ -98,11 +104,7 @@ Buka <http://localhost:3000> lalu masuk dengan akun dari langkah 1.
 ## Kelola pengguna
 
 - **Tambah pengguna:** Supabase → Authentication → Users → Add user (centang Auto Confirm). Peran awalnya Viewer.
-- **Jadikan admin:** jalankan di SQL Editor:
-  ```sql
-  update profiles set role = 'admin'
-  where id = (select id from auth.users where email = 'nama@contoh.com');
-  ```
+- **Ubah peran (Admin/Viewer) atau nama:** menu **Pengguna** di aplikasi (khusus admin).
 
 ## Catatan paket gratis
 

@@ -7,9 +7,11 @@ import {
   Boxes,
   ChevronRight,
   Database,
+  FileSpreadsheet,
   Laptop,
   LayoutDashboard,
   Receipt,
+  UserCog,
   Users,
   Warehouse,
   Wrench,
@@ -33,6 +35,7 @@ const SECTIONS: { title: string; items: Item[] }[] = [
       { href: "/aset", label: "Aset IT", icon: Boxes, countKey: "assets" },
       { href: "/stok", label: "Stok Barang", icon: Warehouse, countKey: "stock" },
       { href: "/karyawan", label: "Karyawan", icon: Users, countKey: "employees" },
+      { href: "/laporan", label: "Laporan", icon: FileSpreadsheet },
     ],
   },
   {
@@ -47,6 +50,7 @@ const SECTIONS: { title: string; items: Item[] }[] = [
     title: "Pengaturan",
     items: [
       { href: "/master", label: "Data Induk", icon: Database },
+      { href: "/pengguna", label: "Pengguna", icon: UserCog },
       { href: "/log", label: "Log Aktivitas", icon: Activity },
     ],
   },
@@ -124,6 +128,7 @@ const SUB_LABEL: Record<string, string> = {
   edit: "Edit",
   transaksi: "Riwayat Transaksi",
   catat: "Catat",
+  label: "Cetak Label",
 };
 
 /** Judul halaman di bar atas, mis. "Aset IT › Detail" */

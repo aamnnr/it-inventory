@@ -12,7 +12,9 @@ export async function signIn(_prev: ActionState, formData: FormData): Promise<Ac
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { error: "Email atau password salah" };
-  redirect("/");
+  // Hanya path internal (bukan "//domain-lain") yang boleh jadi tujuan setelah login
+  const next = String(formData.get("next") ?? "");
+  redirect(next.startsWith("/") && !next.startsWith("//") ? next : "/");
 }
 
 export async function signOut() {
